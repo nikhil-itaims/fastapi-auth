@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+
+    volumes:
+      - data:/data/db
+
+  ota_app:
+    build: .
+    image: ota_image:latest
+    container_name: ota_app
+
+    ports:
+      - 8080:8000
+
+    depends_on:
+      - mongodb
+
+    volumes:
+      - static:/app/static
+
+volumes:
+  data:
+  static:

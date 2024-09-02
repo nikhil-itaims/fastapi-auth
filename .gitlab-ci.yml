@@ -1,0 +1,20 @@
+stages:
+  - dev-deploy
+
+variables:
+  DEV_DEPLOYMENT_PATH: $DEV_DEPLOYMENT_PATH
+
+dev_deploy:
+    stage: dev-deploy
+    only:
+        - development
+    before_script:
+        - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+        - eval $(ssh-agent -s)
+        - echo "$DEV_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - ssh-keyscan $DEV_IP_ADDRESS >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+    script:
+      - ssh -o StrictHostKeyChecking=no $DEV_SERVER_USER@$DEV_IP_ADDRESS "cd " $DEV_DEPLOYMENT_PATH "; git stash; git pull origin development; docker compose down; docker rmi ota_image; docker compose up -d;"

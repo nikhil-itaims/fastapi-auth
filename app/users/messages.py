@@ -1,0 +1,23 @@
+class ErrorMessage:
+    user_not_exists = "User not exists"
+    user_email_not_exists = "User with this email not exists"
+    wrong_email = "Incorrect email"
+    wrong_password = "Incorrect password"
+    invalid_email = "Please enter valid email address"
+    user_already_exists = "User already exists with this email"
+    server_error = "Something went wrong"
+    user_not_added = "Something went wrong while registering new user"
+    invalid_secret_token = "Invalid link please request new email"
+    forgot_password_link_expire = "Link is expired please request a new link"
+    same_not_password = "New password and confirm password are not same"
+    same_password = "Current password and new password not be same"
+    wrong_current_password = "Current password is wrong"
+    password_not_updated = "Something went wrong while updating password"
+ 
+class InfoMessage:
+    user_created = "Your registration successfully completed"
+    login_success = "You are successfully logged in"
+    update_user = "Profile details updated successfully"
+    user_profile = "User profile details"
+    forgot_password_mail_sent = "Password reset link sent to your registered email"
+    password_updated = "Password updated successfuly"
