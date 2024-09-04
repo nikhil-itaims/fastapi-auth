@@ -1,5 +1,5 @@
 from fastapi import status
-from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 
 class Response:
     """This class provides a standardized response structure for FastAPI.
@@ -28,7 +28,14 @@ class Response:
         Returns:
             Response: A success response object.
         """
-        return cls(status=status.HTTP_200_OK, message=message, data=data)
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": status.HTTP_200_OK,
+                "message": f"{message}",
+                "data": data
+            },
+        )
 
     @classmethod
     def created(cls, message: str = None, data: dict | list | None = None) -> "Response":
@@ -41,10 +48,17 @@ class Response:
         Returns:
             Response: A creation success response object.
         """
-        return cls(status=status.HTTP_201_CREATED, message=message, data=data)
+        return JSONResponse(
+            status_code=status.HTTP_201_CREATED,
+            content={
+                "status": status.HTTP_201_CREATED,
+                "message": f"{message}",
+                "data": data
+            },
+        )
 
     @classmethod
-    def error(cls, status_code: int, message: str, errors: list[dict] = None) -> "Response":
+    def error(cls, status_code: int, message: str, errors: list[dict] | str = None) -> "Response":
         """Creates an error response.
 
         Args:
@@ -55,4 +69,11 @@ class Response:
         Returns:
             Response: An error response object.
         """
-        raise HTTPException(status_code=status_code, message=message, errors=errors)
+        return JSONResponse(
+            status_code=status_code,
+            content={
+                "status": status_code,
+                "message": f"{message}",
+                "error": errors
+            },
+        )
