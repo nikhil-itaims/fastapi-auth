@@ -17,4 +17,4 @@ dev_deploy:
         - ssh-keyscan $DEV_IP_ADDRESS >> ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
     script:
-      - ssh -o StrictHostKeyChecking=no $DEV_SERVER_USER@$DEV_IP_ADDRESS "cd " $DEV_DEPLOYMENT_PATH "; git stash; git pull origin development; docker compose down; docker rmi ota_image; docker compose up -d;"
+      - ssh -o StrictHostKeyChecking=no $DEV_SERVER_USER@$DEV_IP_ADDRESS "cd " $DEV_DEPLOYMENT_PATH "; git stash; git pull origin development; docker compose down; docker rmi auth_image; docker compose up -d;"

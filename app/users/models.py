@@ -9,6 +9,7 @@ class User(BaseModel):
     phone: str
     country_code: str
     password: str
+    role: str
     created_at: datetime
     updated_at: datetime
 

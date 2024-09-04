@@ -19,6 +19,8 @@ logger.addHandler(file_handler)
 CLIENT_ORIGINS = list(filter(None, os.getenv("CLIENT_ORIGINS").split(",")))
 
 class Settings(BaseSettings):
+    app_title: str
+    app_version: str
     db_hostname: str
     db_port: str
     db_username: str

@@ -8,10 +8,10 @@ services:
     volumes:
       - data:/data/db
 
-  ota_app:
+  auth_app:
     build: .
-    image: ota_image:latest
-    container_name: ota_app
+    image: auth_image:latest
+    container_name: auth_app
 
     ports:
       - 8080:8000

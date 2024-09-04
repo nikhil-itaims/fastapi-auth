@@ -20,4 +20,4 @@ class InfoMessage:
     update_user = "Profile details updated successfully"
     user_profile = "User profile details"
     forgot_password_mail_sent = "Password reset link sent to your registered email"
-    password_updated = "Password updated successfuly"
+    password_updated = "Password updated successfully"

@@ -1,1 +1,1 @@
-# OTA Backend with fastapi, monogdb and docker
+# AUTH Backend with fastapi, monogdb and docker

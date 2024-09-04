@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
+from pydantic.networks import EmailStr
 from datetime import datetime
 from helpers import constants
 import re
@@ -6,7 +7,7 @@ import re
 class RegisterSchema(BaseModel):
     first_name: str = Field()
     last_name: str = Field()
-    email: str = Field(pattern=constants.email_regex)
+    email: EmailStr = Field(pattern=constants.email_regex)
     phone: str = Field(min_length=10, max_length=10)
     country_code: str = Field(max_length=3) 
     password: str = Field(min_length=8, max_length=16)
@@ -14,7 +15,7 @@ class RegisterSchema(BaseModel):
     updated_at: datetime = datetime.utcnow()
 
     @field_validator('email')
-    def validate_pan_number(cls, value):
+    def validate_email(cls, value):
         if not re.match(constants.email_regex, value):
             raise ValueError("Invalid email address")
         return value

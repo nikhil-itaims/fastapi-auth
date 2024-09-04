@@ -1,32 +1,58 @@
+from fastapi import status
+from fastapi.exceptions import HTTPException
+
 class Response:
-    """This class is universal to return standard API responses
+    """This class provides a standardized response structure for FastAPI.
 
     Attributes:
-        status (int): The http status response from API
-        data (dict/list): The Data from API
-        message (str): The message from the API
+        status (int): The HTTP status code of the response.
+        message (str, optional): A user-friendly message describing the response.
+        data (dict, list, or None, optional): The actual data returned by the API.
+        errors (list[dict], optional): A list of dictionaries containing error details.
     """
-    def __init__(self, status: int, message: str, data: dict) -> None:
-        """This function defines arguments that are used in the class
 
-        Arguments:
-            status (int): The http status response from API
-            data (dict/list): The Data from API
-            message (str): The message from the API
-
-        Returns:
-            Returns the API standard response
-        """
+    def __init__(self, status: int, message: str = None, data: dict | list | None = None, errors: list[dict] = None):
         self.status = status
         self.message = message
         self.data = data
+        self.errors = errors
 
-    @property
-    def make(self) -> dict:
-        result = {
-            'status': self.status,
-            'message': self.message,
-            'data': self.data
-        }
+    @classmethod
+    def success(cls, message: str = None, data: dict | list | None = None) -> "Response":
+        """Creates a success response.
 
-        return result
+        Args:
+            message (str, optional): A user-friendly message.
+            data (dict, list, or None, optional): The actual data.
+
+        Returns:
+            Response: A success response object.
+        """
+        return cls(status=status.HTTP_200_OK, message=message, data=data)
+
+    @classmethod
+    def created(cls, message: str = None, data: dict | list | None = None) -> "Response":
+        """Creates a creation success response.
+
+        Args:
+            message (str, optional): A user-friendly message.
+            data (dict, list, or None, optional): The actual data.
+
+        Returns:
+            Response: A creation success response object.
+        """
+        return cls(status=status.HTTP_201_CREATED, message=message, data=data)
+
+    @classmethod
+    def error(cls, status_code: int, message: str, errors: list[dict] = None) -> "Response":
+        """Creates an error response.
+
+        Args:
+            status_code (int): The HTTP status code of the error.
+            message (str): A user-friendly message describing the error.
+            errors (list[dict], optional): A list of dictionaries containing error details.
+
+        Returns:
+            Response: An error response object.
+        """
+        raise HTTPException(status_code=status_code, message=message, errors=errors)
