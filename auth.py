@@ -2,9 +2,10 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 import jwt
 from jwt.exceptions import InvalidTokenError
-from fastapi import Depends, HTTPException
+from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from config import get_settings
+from helpers.response import Response
 
 settings = get_settings()
 
@@ -38,9 +39,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 		payload = jwt.decode(token, settings.secret_key, algorithms=[settings.oauth_algorithm])
 		user_id = payload.get("_id")
 		if not user_id:
-			raise HTTPException(status_code=401, detail="Please login again")
+			return Response.error(status.HTTP_401_UNAUTHORIZED, "Please login again")
     	
 		return payload
   	
 	except InvalidTokenError as e:
-		raise HTTPException(status_code=401, detail="Invalid token")
+		return Response.error(status.HTTP_401_UNAUTHORIZED, "Please login again", str(e))
