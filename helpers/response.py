@@ -1,6 +1,12 @@
 from fastapi import status
 from fastapi.responses import JSONResponse
 
+class CustomException(Exception):
+    def __init__(self, status: int, message: str = None, errors: list[dict] | str | None = None):
+        self.status = status
+        self.message = message
+        self.errors = errors
+
 class Response:
     """This class provides a standardized response structure for FastAPI.
 
@@ -11,14 +17,14 @@ class Response:
         errors (list[dict], optional): A list of dictionaries containing error details.
     """
 
-    def __init__(self, status: int, message: str = None, data: dict | list | None = None, errors: list[dict] = None):
+    def __init__(self, status: int, message: str = None, data: dict | list | str | None = None, errors: list[dict] | str | None = None):
         self.status = status
         self.message = message
         self.data = data
         self.errors = errors
 
     @classmethod
-    def success(cls, message: str = None, data: dict | list | None = None) -> "Response":
+    def success(cls, message: str = None, data: dict | list | str | None = None) -> "Response":
         """Creates a success response.
 
         Args:
@@ -38,7 +44,7 @@ class Response:
         )
 
     @classmethod
-    def created(cls, message: str = None, data: dict | list | None = None) -> "Response":
+    def created(cls, message: str = None, data: dict | list | str | None = None) -> "Response":
         """Creates a creation success response.
 
         Args:
@@ -58,7 +64,7 @@ class Response:
         )
 
     @classmethod
-    def error(cls, status_code: int, message: str, errors: list[dict] | str = None) -> "Response":
+    def error(cls, status_code: int, message: str, errors: list[dict] | str | None = None) -> "Response":
         """Creates an error response.
 
         Args:
@@ -69,11 +75,5 @@ class Response:
         Returns:
             Response: An error response object.
         """
-        return JSONResponse(
-            status_code=status_code,
-            content={
-                "status": status_code,
-                "message": f"{message}",
-                "error": errors
-            },
-        )
+        
+        raise CustomException(status_code, message, errors)

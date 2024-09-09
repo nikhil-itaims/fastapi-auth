@@ -1,10 +1,10 @@
 from fastapi import APIRouter, status, Depends, BackgroundTasks, Depends
-from fastapi.security import OAuth2PasswordRequestForm
 from helpers.response import Response
 from app.users.messages import ErrorMessage, InfoMessage
 from app.users.schemas import RegisterSchema, LoginSchema, ForgotPasswordRequestSchema, \
     ResetForgotPasswordSchema, ChangePasswordSchema
 from app.users.models import User
+from fastapi.security import OAuth2PasswordRequestForm
 from app.users.repository import add_user, get_user_by_email, get_user_by_id, update_user_details
 from auth import create_access_token, create_refresh_token, get_current_user, get_password_hash, verify_password
 import re 
@@ -129,6 +129,7 @@ async def forget_password(payload: ForgotPasswordRequestSchema, background_tasks
         user = await get_user_by_email(payload.email)
 
         if not user:
+            print("user", user)
             return Response.error(status.HTTP_400_BAD_REQUEST, ErrorMessage.user_email_not_exists, None) 
         
         token_payload = {
@@ -202,7 +203,7 @@ async def change_password(payload: ChangePasswordSchema, current_user: User = De
         user_id = str(current_user['_id'])
         user = await get_user_by_id(user_id)
 
-        if verify_password(payload['current_password'], user['password']):
+        if not verify_password(payload['current_password'], user['password']):
             return Response.error(status.HTTP_400_BAD_REQUEST, ErrorMessage.wrong_current_password, None)
 
         if payload['new_password'] != payload['confirm_password']:
@@ -217,7 +218,7 @@ async def change_password(payload: ChangePasswordSchema, current_user: User = De
 
         password_updated = await update_user_details(user_id, data)
         if password_updated:
-            return Response.success(status.HTTP_200_OK, InfoMessage.password_updated, None)
+            return Response.success(InfoMessage.password_updated, None)
         
         else:
             return Response.error(status.HTTP_400_BAD_REQUEST, ErrorMessage.password_not_updated, None)

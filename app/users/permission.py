@@ -9,6 +9,6 @@ async def is_admin(user_id):
     user_data = await global_repository.get_document_data(User, user_id)
     return True if user_data['role'] == constants.Role.admin else False
 
-async def is_user(user_id):
+async def is_customer(user_id):
     user_data = await global_repository.get_document_data(User, user_id)
-    return True if user_data['role'] == constants.Role.user else False
+    return True if user_data['role'] == constants.Role.customer else False

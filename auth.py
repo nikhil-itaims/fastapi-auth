@@ -39,7 +39,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 		payload = jwt.decode(token, settings.secret_key, algorithms=[settings.oauth_algorithm])
 		user_id = payload.get("_id")
 		if not user_id:
-			return Response.error(status.HTTP_401_UNAUTHORIZED, "Please login again")
+			return Response.error(status.HTTP_401_UNAUTHORIZED, "Please login again", None)
     	
 		return payload
   	

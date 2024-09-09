@@ -1,1 +1,1 @@
-# AUTH Backend with fastapi, monogdb and docker
+# Fastapi auth app, monogdb and docker

@@ -10,7 +10,7 @@ services:
 
   auth_app:
     build: .
-    image: auth_image:latest
+    image: auth_app_image:latest
     container_name: auth_app
 
     ports:

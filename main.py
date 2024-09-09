@@ -5,11 +5,24 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from config import get_settings, logger
 from app.users.routers import auth_router
+from helpers.response import CustomException
 
 settings = get_settings()
 
 app = FastAPI()
 app = FastAPI(title=settings.app_title, version=settings.app_version)
+
+@app.exception_handler(CustomException)
+async def custom_exception_handler(request: Request, exc: CustomException):
+    return JSONResponse(
+            status_code=exc.status,
+            content={
+                "status": exc.status,
+                "message": exc.message,
+                "error": exc.errors
+            }
+        )
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -26,7 +39,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             })
         )
     
-    if 'phone' in details[0]['loc']:
+    if 'mobile_no' in details[0]['loc']:
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content=jsonable_encoder({
@@ -72,4 +85,4 @@ app.include_router(auth_router, tags=['Auth'], prefix='/api/v1/auth')
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to OTA backend"}
+    return {"message": "Welcome to fastapi"}
